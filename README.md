@@ -2,8 +2,9 @@
     <h1>Scylla: A Unified Tools for Code Smell Classification</h2>
 </div>
 <p align = "center">  
-  <img width="900" src="https://github.com/user-attachments/assets/04b2c887-cf19-450c-a502-dc7cbf552546"/>
+  <img width="900" src="https://github.com/user-attachments/assets/19729848-a80e-4f66-9b2a-bca4a9184ea0"/>
 </p>
+
 
 <!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16707253.svg)](https://doi.org/10.5281/zenodo.16707253) -->
 
