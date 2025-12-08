@@ -1,0 +1,109 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: lm4smells-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - ./docker.env
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks: [ lm4smells-net ]
+
+  postgresql:
+    image: postgres:13
+    container_name: lm4smells-postgresql
+    env_file:
+      - ./docker.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./database/migrations/create_tables.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lm4smells_user"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks: [ lm4smells-net ]
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "ollama serve & 
+       sleep 5 && 
+       ollama pull gemma2:2b && 
+       ollama pull mistral:latest && 
+       ollama pull deepseek-r1:1.5b && 
+       ollama pull qwen2.5-coder:1.5b && 
+       ollama pull codellama:7b && 
+       wait"
+    networks: [ lm4smells-net ]
+  
+  code-extractor-api:
+    build:
+      context: ./lm4smells-code-extractor.API
+    container_name: lm4smells-code-extractor.API
+    env_file:
+      - ./docker.env
+    ports:
+      - "8081:8000"
+    depends_on:
+      - rabbitmq
+      - postgresql
+    networks: [ lm4smells-net ]
+
+  lm-integrator:
+    build:
+      context: ./lm4smells-lm-integrator
+    container_name: lm4smells-lm-integrator
+    env_file:
+      - ./docker.env
+    ports:
+      - "8001:8001"
+    depends_on:
+      - rabbitmq
+      - ollama
+      - postgresql
+    networks: [ lm4smells-net ]
+  
+  scylla:
+    build:
+      context: ./scylla
+      dockerfile: Dockerfile
+    image: scylla-frontend:latest
+    ports:
+      - "8002:80"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - ./docker.env
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgresql
+    networks: [ lm4smells-net ]
+
+networks:
+  lm4smells-net:
+    name: lm4smells-net
+    driver: bridge
+
+volumes:
+  ollama_data:
+  rabbitmq_data:
+  pg_data:

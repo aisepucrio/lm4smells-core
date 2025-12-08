@@ -1,13 +1,15 @@
 <div align="center" >
-    <h1>Code Smell Classification in Python: </br> Are Small Language Models Up to the Task?</h2>
+    <h1>AISEPY: A Unified Tools for Code Smell Classification</h2>
 </div>
+<p align = "center">  
+  <img width="900" src="https://github.com/user-attachments/assets/04b2c887-cf19-450c-a502-dc7cbf552546"/>
+</p>
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17074239.svg)](https://doi.org/10.5281/zenodo.17074239)
+<!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16707253.svg)](https://doi.org/10.5281/zenodo.16707253) -->
 
+The pre-print for the paper is available [here]()
 
-The pre-print for the paper is available [here](Paper_SBES_IIER_2025.pdf)
-
-# Citation
+# 📄 Citation
 
 ```bibtex
 @Inproceedings{soares_de_oliveira2025:SBES,
@@ -21,35 +23,38 @@ The pre-print for the paper is available [here](Paper_SBES_IIER_2025.pdf)
 ```
 
 
-# Code-smell-analysis
+# 🚀 Scylla
 
 The application serves as a front-end interface, allowing users to submit code for processing and extraction. It also provides the option to specify additional details, such as the prompt that will help the SLM interpret the context or intended query, the selection of the SLM to be used during processing, and the definition of the extraction type, whether for classes or methods. Furthermore, the application informs the user when processing begins, ensuring clarity and ease of use throughout the execution of the task.
 
-## Built with
+## ⚙️ Built with
 * HTML
 * CSS
 * JavaScript
 
 ## How to run?
 
-* 1 - Open ```index.html``` in your browser.
+* 1 - Make sure you are in the `scylla` folder
+* 2 - Run: ```python -m http.server 8080```.
+* 3 - Host: ```http://localhost:8080```
 
 
-## Dependencies
+## 🔗 Dependencies
 
 * lm4smells-code-extractor.API
 
 ----------
 </br>
 
-# lm4smells-code-extractor.API
+# 🚀 lm4smells-code-extractor.API
 
 The application operates within an anti-corruption layer (ACL), acting as an event producer. Its main responsibility is to receive requests from the frontend service, process them, and extract relevant information, such as the classes or methods present in the submitted files. This functionality enables the identification of classes and methods, along with their respective properties. To achieve this, the application uses the Abstract Syntax Tree (AST) technique, which provides a structural representation of the input code. After extracting the information, the application sends an event to the router, allowing the lm4smells-lm-integrator service to consume it.
 
 
-## Built with
+## ⚙️ Built with
 * [Python 3.10](https://www.python.org/downloads/release/python-3100/)
 * [RabbitMq](https://www.rabbitmq.com/)
+* [Postgresql](https://www.postgresql.org/)
 
 
 ## Project Structure
@@ -66,36 +71,39 @@ The application operates within an anti-corruption layer (ACL), acting as an eve
 
 ```
 
-## How to run?
+## 🛠️ Environment configuration *without docker*
 
 * 1 - Make sure you are in the `app` folder
 * 2 - Run: `pip install -r requirements.txt`
-* 3 - Set up with Unix System ```export $(grep -v '^#' .env | xargs -0)```
-* 3 - Set up with Windows System ``` Get-Content .env | ForEach-Object {
-    if ($_ -notmatch '^#' -and $_ -match '=') {
-        $parts = $_ -split '=', 2
-        [System.Environment]::SetEnvironmentVariable($parts[0], $parts[1], "Process")
-    }
-}```
-
-* 4 - Run: `fastapi dev main.py`
-* 5 - Host: `http://localhost:8000/docs`
+* 3 - Instal external services: [PostgreSQL](https://www.postgresql.org/), [RabbitMQ](https://www.rabbitmq.com/), [Ollama](https://ollama.com/download) and [PgAdmin](https://www.pgadmin.org/download/)*
+* 4 - Configure **RabbitMq** [queue](/docs/configuration/rabittmq.md)
+* 5 - Run inside the database [create_tables.sql](/database/migrations/create_tables.sql)
+* 5 - Run: `fastapi dev main.py`
+* 6 - Host: `http://localhost:8000/docs`
 
 
-## Dependencies
+## 🐳 Environment configuration *with docker*
+
+* 1 - docker-compose up -d
+* 2 - Configure **RabbitMq** [queue](/docs/configuration/rabittmq.md)
+* 3 - Host: `http://localhost:8000/docs
+
+
+## 🔗 Dependencies
 
 * RabbitMq
+* Postgresql
 * lm4smells-lm-integrator
 
 ----------
 </br>
 
-# lm4smells-lm-integrator
+# 🚀 lm4smells-lm-integrator
 
 The main objective of this application is to act as an event consumer, receiving messages from the router and processing them according to the attributes defined in the event payload. To perform this processing, the application interacts with SLMs, either through an instance of Ollama or via RESTful protocols. After the processing is completed and the operational data is obtained, the results are stored in a relational database, ensuring their availability for data analysis and future research.
 
 
-## Built with
+## ⚙️ Built with
 * [Python 3.10](https://www.python.org/downloads/release/python-3100/)
 * [Ollama](https://ollama.com/)
 * [RabbitMq](https://www.rabbitmq.com/)
@@ -116,22 +124,23 @@ The main objective of this application is to act as an event consumer, receiving
 
 ```
 
-## How to run?
+## 🛠️ Environment configuration *without docker*
 
 * 1 - Make sure you are in the `app` folder
-* 2 - Run `pip install -r requirements.txt`
-* 3 - Set up with Unix System ```export $(grep -v '^#' .env | xargs -0)```
-* 3 - Set up with Windows System ``` Get-Content .env | ForEach-Object {
-    if ($_ -notmatch '^#' -and $_ -match '=') {
-        $parts = $_ -split '=', 2
-        [System.Environment]::SetEnvironmentVariable($parts[0], $parts[1], "Process")
-    }
-}```
-* 4 - Run [Ollama](lm4smells-lm-integrator/src/app/application/dtos/slm_ollama_models.py) with the models you intend to use
-* 5 - Run `python main.py`
+* 2 - Run: `pip install -r requirements.txt`
+* 3 - Instal external services: [PostgreSQL](https://www.postgresql.org/), [RabbitMQ](https://www.rabbitmq.com/), [Ollama](https://ollama.com/download) and [PgAdmin](https://www.pgadmin.org/download/)*
+* 4 - Configure **RabbitMq** [queue](/docs/configuration/rabittmq.md)
+* 5 - Run inside the database [create_tables.sql](/database/migrations/create_tables.sql)
+* 5 - Run: `python main.py`
 
 
-## Dependencies 
+## 🐳 Environment configuration *with docker*
+
+* 1 - docker-compose up -d
+* 2 - Configure **RabbitMq** [queue](/docs/configuration/rabittmq.md)
+
+
+## 🔗 Dependencies 
 
 * RabbitMq
 * Ollama
@@ -140,7 +149,7 @@ The main objective of this application is to act as an event consumer, receiving
 </br>
 
 
-# Contracts
+# 📝 Contracts
 
 This project adopts a distributed architecture, in which each service is responsible for a specific part of the system and, consequently, uses contracts to establish communication between the microservices. All contracts are organized in the [contract](docs/contracts) folder.
 
@@ -189,19 +198,10 @@ This application uses deep learning techniques to improve the classification of 
 ---
 
 
-## Guide to the Files and Their Execution
-
-This section provides an overview of the files used in this study, as well as instructions on how to use them effectively. The repository is organized into different folders containing datasets, scripts for code extraction and analysis, trained machine learning models, and supporting resources for the execution of the described experiments.
-
-Each subsection explains the purpose of the files, how they contribute to the workflow, and provides step-by-step guidance on how to run the scripts or use the data. Whether you are exploring the dataset, replicating model training, performing code extraction, or analyzing the results related to explainability, the instructions provided here will help you understand and use each component of the [repository](docs/experiments/study_processes.md).
-
-
-
-
 # Artifacts
 
 
-This repository provides the artifacts associated with the paper, including the code used to extract the algorithms analyzed by PySmell, validating their correctness; the datasets containing the classified code samples; and the models employed in the experiments, with the aim of supporting result reproducibility and fostering further research. [Zenodo](https://zenodo.org/records/17074239)
+This repository provides the artifacts associated with the paper, including the code used to extract the algorithms analyzed by PySmell, validating their correctness; the datasets containing the classified code samples; and the models employed in the experiments, with the aim of supporting result reproducibility and fostering further research. [Zenodo](https://zenodo.org/records/16707253)
 
 
 <!-- 
