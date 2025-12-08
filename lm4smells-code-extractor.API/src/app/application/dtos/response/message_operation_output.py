@@ -2,7 +2,7 @@ class MessageOperationOutput:
     def __init__(self, file_name: str, programming_language: str, lineno: int, 
                  code_metric: dict, code: str, prompt_type: str, prompt: str,
                  model: str, is_composite_prompt: bool, analyse_type: str, 
-                 class_name: str = None, method_name: str = None):
+                 task_id: str, class_name: str = None, method_name: str = None):
         self.file_name = file_name
         self.programming_language = programming_language
         self.lineno = lineno
@@ -15,6 +15,7 @@ class MessageOperationOutput:
         self.prompt = prompt
         self.model = model
         self.is_composite_prompt = is_composite_prompt
+        self.task_id = task_id
 
 
     @staticmethod
@@ -32,6 +33,7 @@ class MessageOperationOutput:
             prompt=input_message.prompt,
             model=input_message.model,
             is_composite_prompt=input_message.is_composite_prompt,
+            task_id=input_message.task_id,
         )
     
     
@@ -47,6 +49,7 @@ class MessageOperationOutput:
             "prompt": self.prompt,
             "model": self.model,
             "is_composite_prompt": self.is_composite_prompt,
+            "task_id": self.task_id
         }
 
         if self.class_name is not None:
