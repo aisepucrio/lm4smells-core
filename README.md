@@ -1,5 +1,5 @@
 <div align="center" >
-    <h1>AISEPY: A Unified Tools for Code Smell Classification</h2>
+    <h1>Scylla: A Unified Tools for Code Smell Classification</h2>
 </div>
 <p align = "center">  
   <img width="900" src="https://github.com/user-attachments/assets/04b2c887-cf19-450c-a502-dc7cbf552546"/>
