@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scylla - AI/ML/SLM Platform</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/help-modal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="../assets/logo.png" width="150rem" height="150rem" alt="Logo" />
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="task.html" class="nav-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>Tasks</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+                <a href="ml.html" class="nav-item">
+                    <i class="fas fa-brain"></i>
+                    <span>Machine Learning</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+                <a href="" class="nav-item active">
+                    <i class="fas fa-network-wired"></i>
+                    <span>Deep Learning</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+                <a href="ast.html" class="nav-item">
+                    <i class="fas fa-code-branch"></i>
+                    <span>AST</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+                <a href="lm.html" class="nav-item">
+                    <i class="fas fa-language"></i>
+                    <span>Language Models</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-actions">
+                    <div class="user-avatar" id="userAvatarContainer"
+                        style="width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Modal do seletor de avatar -->
+            <div id="avatarPicker" class="avatar-picker" hidden aria-hidden="true" role="dialog" aria-label="Selecionar avatar">
+                <div class="avatar-picker__content" role="document">
+                    <div class="avatar-picker__header">
+                        <h3>Choose your avatar</h3>
+                        <button id="closeAvatarPicker" class="ap-btn ap-btn-icon" aria-label="Close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div class="avatar-grid" id="avatarGrid" role="list">
+                    <!-- thumbnails gerados por JS -->
+                    </div>
+
+                    <div class="avatar-picker__footer">
+                    <button id="clearAvatar" class="ap-btn ap-btn-ghost">
+                        <i class="fa-regular fa-circle-xmark"></i> Default Avatar
+                    </button>
+                    <button id="uploadAvatar" class="ap-btn">
+                        <i class="fa-solid fa-upload"></i> User your avatar (optional)
+                    </button>
+                    <input id="avatarFile" type="file" accept="image/*" hidden>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="content-area">
+                <div class="page-header">
+                    <p>Upload File</p>
+                </div>
+
+                <form class="upload-form" id="upload-form">
+                    <!-- File Upload Area -->
+                    <div class="upload-section">
+                        <div class="drop-zone" id="drop-zone">
+                            <div class="drop-zone-content">
+                                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                <p class="upload-text">Drag & drop your files here, or click to browse</p>
+                                <p class="upload-subtext">Upload the Python files for processing</p>
+                            </div>
+                            <input type="file" id="file-upload" multiple accept=".py,.txt,.js,.ts,.jsx,.tsx" hidden>
+                        </div>
+
+                        <!-- File List -->
+                        <div class="file-list-container hidden" id="file-list-container">
+                            <div class="file-list-header">
+                                <span class="file-count-text">Selected files: <span id="file-count">0</span></span>
+                            </div>
+                            <div class="file-list" id="file-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Form Fields -->
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="extract-type">Extraction Type
+                                <i class="fa-solid fa-circle-info info-icon" data-help-id="extract_method"></i>
+                            </label>
+                            <select id="extract-type" class="form-select" required>
+                                <option value="">Select extraction type</option>
+                                <!-- <option value="1">Class</option> --> 
+                                <option value="2">Method</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="analyse-type">Smell Type
+                                <i class="fa-solid fa-circle-info info-icon" data-help-id="dl_smell_type"></i>
+                            </label>
+                            <select id="analyse-type" class="form-select" required>
+                                <option value="">Select smell type</option>
+                                <!-- <option value="large-class">Large Class</option> -->
+                                <option value="long-method">Long Method</option>
+                                <option value="long-parameter-list">Long Parameter List</option>
+                                <!-- <option value="data-class">Data Class</option>
+                                <option value="lazy-class">Lazy Class</option>
+                                <option value="magic-numbers">Magic Numbers</option> -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dl_model">Model</label>
+                            <select id="dl_model" class="form-select" required>
+                                <option value="">Select model</option>
+                                <option value="XJ">Keras</option>
+                                <!-- <option value="KNN">KNN</option> -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-actions">
+                        <button type="button" class="submit-button" id="submit-button">
+                            <i class="fas fa-check icon-button"></i>
+                            Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+        <!-- Help Modal -->
+    <div id="help-modal" class="help-modal" hidden>
+    <div class="help-modal__content">
+        <header class="help-modal__header">
+        <h3 id="hm-title">Help</h3>
+        <!-- <button class="hm-btn hm-btn-icon" data-hm-close>&times;</button> -->
+        </header>
+        <div class="help-modal__body" id="hm-body"></div>
+    </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script type="module" src="../scripts/dl.js"></script>
+    <script type="module" src="../scripts/utils/picker.js"></script>
+    <script type="module" src="../scripts/utils/helper.js?v=2"></script>
+</body>
+</html>
