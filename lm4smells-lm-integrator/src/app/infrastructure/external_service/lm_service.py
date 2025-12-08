@@ -9,7 +9,7 @@ class LMService(LMBaseService):
         super().__init__()
 
     def send_message(self, model: str,  prompt: str):
-        response = ollama.chat(
+        response = self.client.chat(
             model=model,
             stream=False,
             messages=[{

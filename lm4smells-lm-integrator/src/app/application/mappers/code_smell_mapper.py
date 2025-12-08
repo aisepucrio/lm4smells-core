@@ -4,6 +4,7 @@ class CodeSmellMapper:
     @staticmethod
     def from_lm_response(message_input, lm_result) -> CodeSmell:
         return CodeSmell(
+            task_id=message_input.task_id,
             smell_type=lm_result.smell_type,
             explanation=lm_result.explanation,
             file_name=message_input.file_name,
