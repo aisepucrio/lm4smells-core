@@ -29,7 +29,11 @@ class LMSettings(BaseSettings):
 
 
 class DBSettings(BaseSettings):
-    db_path: str
+    POSTGRES_HOST: str
+    POSTGRES_PORT: int
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
 
     class Config(Environment):
         pass

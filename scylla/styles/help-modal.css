@@ -1,0 +1,73 @@
+#help-modal[hidden] { display: none !important; }
+
+#help-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0,0,0,.45) !important;
+  display: grid !important;
+  place-items: center !important;
+  z-index: 99999 !important;
+  padding: 1rem !important;
+}
+
+#help-modal .help-modal__content {
+  background: #fff !important;
+  color: #111 !important;
+  border-radius: .8rem !important;
+  width: min(92vw, 780px) !important;
+  box-shadow: 0 10px 35px rgba(0,0,0,.25) !important;
+  padding: 2rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif !important;
+}
+
+#help-modal .help-modal__header { display:flex !important; align-items:center !important; justify-content:space-between !important; gap:.5rem !important; }
+#help-modal .help-modal__header h3 { margin:0 !important; font-size:1.1rem !important; line-height:1.2 !important; }
+#help-modal .help-modal__body { max-height: 70vh !important; overflow-y: auto !important; padding-right: .5rem !important; scrollbar-width: thin !important; color:#111 !important; }
+#help-modal .help-modal__footer { display:flex !important; justify-content:flex-end !important; gap:.5rem !important; flex-wrap:wrap !important; }
+
+#help-modal .hm-btn{
+  display:inline-flex !important; align-items:center !important; gap:.5rem !important; padding:.5rem .8rem !important;
+  border:1px solid #cfd6dd !important; background:#fff !important; border-radius:.6rem !important; cursor:pointer !important;
+}
+#help-modal .hm-btn:hover{ background:#f4f6f8 !important; }
+#help-modal .hm-btn-icon{
+  padding:.3rem .6rem !important; height:2.25rem !important; font-size:1.4rem !important; line-height:1 !important;
+  border:1px solid transparent !important; background:transparent !important;
+}
+#help-modal .hm-btn-icon:hover{ background:#f4f6f8 !important; border-color:#cfd6dd !important; }
+
+.info-icon{
+  margin-left:.4rem !important; cursor:pointer !important; font-size:.95rem !important; vertical-align:middle !important;
+  color:#586174 !important;
+}
+.info-icon:hover{ color:#111 !important; }
+
+
+/* Table to organize prompt techniques */
+.help-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.help-table th, .help-table td {
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 0.8rem;
+  vertical-align: top;
+}
+
+.help-table th {
+  background-color: #f8fafc;
+  text-align: left;
+  font-weight: 600;
+}
+
+.help-table td b {
+  color: #111;
+}
+

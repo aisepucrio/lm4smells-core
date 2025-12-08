@@ -1,0 +1,2 @@
+class MLOperationOutput:
+    pass

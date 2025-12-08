@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scylla - AI/ML/SLM Platform</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/table.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="../assets/logo.png" width="150rem" height="150rem" alt="Logo" />
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="" class="nav-item active">
+                    <i class="fas fa-tasks"></i>
+                    <span>Tasks</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+                <a href="ml.html" class="nav-item">
+                    <i class="fas fa-brain"></i>
+                    <span>Machine Learning</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+                <a href="dl.html" class="nav-item">
+                    <i class="fas fa-network-wired"></i>
+                    <span>Deep Learning</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+                <a href="ast.html" class="nav-item">
+                    <i class="fas fa-code-branch"></i>
+                    <span>AST</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+                <a href="lm.html" class="nav-item">
+                    <i class="fas fa-language"></i>
+                    <span>Language Models</span>
+<!-- <span class="nav-badge">1</span> -->
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-actions">
+                    <div class="user-avatar" id="userAvatarContainer"
+                        style="width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Modal do seletor de avatar -->
+            <div id="avatarPicker" class="avatar-picker" hidden aria-hidden="true" role="dialog" aria-label="Selecionar avatar">
+                <div class="avatar-picker__content" role="document">
+                    <div class="avatar-picker__header">
+                    <h3>Choose your avatar</h3>
+                    <button id="closeAvatarPicker" class="ap-btn ap-btn-icon" aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    </div>
+
+                    <div class="avatar-grid" id="avatarGrid" role="list">
+                    <!-- thumbnails gerados por JS -->
+                    </div>
+
+                    <div class="avatar-picker__footer">
+                    <button id="clearAvatar" class="ap-btn ap-btn-ghost">
+                        <i class="fa-regular fa-circle-xmark"></i> Default Avatar
+                    </button>
+                    <button id="uploadAvatar" class="ap-btn">
+                        <i class="fa-solid fa-upload"></i> User your avatar (optional)
+                    </button>
+                    <input id="avatarFile" type="file" accept="image/*" hidden>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="table-card">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Task Type</th>
+                            <th>Status</th>
+                            <th class="col-actions"></th>
+                        </tr>
+                        </thead>
+                        <tbody id="tasks-tbody"></tbody>
+                    </table>
+                </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    
+    <script type="module" src="../scripts/task.js"></script>
+    <script type="module" src="../scripts/utils/picker.js"></script>
+</body>
+
+</html>

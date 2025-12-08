@@ -4,7 +4,7 @@ from threading import Thread
 from queue import Queue, Empty
 import pika
 import json
-
+import time
 
 class MessageService:
     def __init__(self, config: MessagingConfig):
@@ -12,64 +12,108 @@ class MessageService:
         self.queue = settings.rabbit_queue
         self.exchange = settings.rabbit_exchange
         self.routing_key = settings.rabbit_routing_key
-        self.local_queue = Queue()
-        self.worker_thread = None
         self.batch_size = settings.rabbit_batch_size
-    
-    
+
+        self._work_q = Queue(maxsize=self.batch_size)
+        self._result_q = Queue(maxsize=self.batch_size)
+
+        self._worker = None
+        self._stopping = False
+
     def consume_message(self, callback):
-        connection = pika.BlockingConnection(self.config.get_connection_parameters())
-        channel = connection.channel()
+        channel = self._connect_with_retry()
         channel.queue_declare(queue=self.queue, durable=True)
-
-        self.worker_thread = Thread(target=self._process_local_queue, args=(callback,), daemon=True)
-        self.worker_thread.start()
-
         channel.basic_qos(prefetch_count=self.batch_size)
-        channel.basic_consume(
-            queue=self.queue,
-            on_message_callback=lambda ch, method, properties, body: self._consume_to_local_queue(ch, method, body),
-            auto_ack=False
+
+        self._worker = Thread(
+            target=self._worker_loop,
+            args=(callback,),
+            daemon=True
         )
+        self._worker.start()
 
         print(f"[*] Waiting for messages in the queue '{self.queue}'. Press CTRL+C to exit.")
+
+        def on_message(ch, method, properties, body):
+            try:
+                msg = json.loads(body)
+            except Exception as e:
+                print(f"[ERROR] Invalid JSON: {e}. NACK (no requeue). body={body!r}")
+                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+                return
+
+            try:
+                self._work_q.put((method.delivery_tag, msg), timeout=5)
+            except Exception:
+                print("[WARN] Work queue full. Requeue message.")
+                ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+                return
+
+            self._drain_results_nonblocking(ch)
+
+        channel.basic_consume(queue=self.queue, on_message_callback=on_message, auto_ack=False)
+
         try:
-            channel.start_consuming()
+            while not self._stopping:
+                channel.connection.process_data_events(time_limit=1.0)
+                self._drain_results_nonblocking(channel)
         except KeyboardInterrupt:
             print("\n[WARNING] Consumption interrupted by the user.")
-            connection.close()
-    
-    def _consume_to_local_queue(self, channel, method, body):
-
-        if self.local_queue.qsize() >= self.batch_size:
-            print("[INFO] Local queue is full. Waiting for processing...")
-            channel.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
-            return
-
-        try:
-            message = json.loads(body)
-            self.local_queue.put((message, channel, method.delivery_tag))
-            print(f"[INFO] Message added to the local queue")
-        except Exception as e:
-            print(f"[ERROR] Error consuming message: {body}. Error: {e}")
-            channel.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
-
-
-    def _process_local_queue(self, callback):
-        while True:
+        finally:
+            self._stopping = True
             try:
-                message, channel, delivery_tag = self.local_queue.get(timeout=1)
-
-                callback(message)
-                print(f"[INFO] Message processed")
-
-                channel.basic_ack(delivery_tag=delivery_tag)
-            except Empty:
+                channel.close()
+            except Exception:
                 pass
+
+
+    def _connect_with_retry(self, attempts: int = 10, delay: float = 2.0):
+        for i in range(1, attempts + 1):
+            try:
+                params = self.config.get_connection_parameters()
+                conn = pika.BlockingConnection(params)
+                ch = conn.channel()
+                return ch
+            except Exception as e:
+                if i == attempts:
+                    raise
+                print(f"[WARN] RabbitMQ connect failed ({e}). Retry {i}/{attempts} in {delay}s...")
+                time.sleep(delay)
+                delay = min(delay * 1.5, 10)
+        raise RuntimeError("unreachable")
+
+    def _worker_loop(self, callback):
+        while not self._stopping:
+            try:
+                delivery_tag, msg = self._work_q.get(timeout=1)
+            except Empty:
+                continue
+
+            try:
+                callback(msg)
+                self._result_q.put(("ack", delivery_tag), timeout=3)
             except Exception as e:
                 print(f"[ERROR] Error processing message from the local queue: {e}")
+                try:
+                    self._result_q.put(("nack", delivery_tag), timeout=3)
+                except Exception:
+                    print("[ERROR] Failed enqueue nack; message may be requeued later")
             finally:
-                if not self.local_queue.empty():
-                    self.local_queue.task_done()
+                self._work_q.task_done()
 
+    def _drain_results_nonblocking(self, ch):
+        while True:
+            try:
+                action, delivery_tag = self._result_q.get_nowait()
+            except Empty:
+                break
 
+            try:
+                if action == "ack":
+                    ch.basic_ack(delivery_tag=delivery_tag)
+                else:
+                    ch.basic_nack(delivery_tag=delivery_tag, requeue=True)
+            except Exception as e:
+                print(f"[ERROR] Channel error during {action} for tag {delivery_tag}: {e}")
+            finally:
+                self._result_q.task_done()

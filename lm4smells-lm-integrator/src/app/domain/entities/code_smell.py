@@ -3,11 +3,12 @@ from typing import Dict, Optional
 
 
 class CodeSmell:
-    def __init__(self, smell_type: str, explanation: str, file_name: str, model: str, 
+    def __init__(self, task_id: str, smell_type: str, explanation: str, file_name: str, model: str, 
                     programming_language: str, class_name: Optional[str], 
                     method_name: Optional[str], analyse_type: str,
                     code: str, prompt_type: str, prompt: str, 
                     is_composite_prompt: bool, code_metric: Dict):
+        self.task_id = task_id
         self.smell_type = smell_type
         self.explanation = explanation
         self.file_name = file_name
