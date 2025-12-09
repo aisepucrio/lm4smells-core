@@ -8,20 +8,8 @@
 
 <!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16707253.svg)](https://doi.org/10.5281/zenodo.16707253) -->
 
-The pre-print for the paper is available [here]()
+The pre-print for the paper is available [here](scylla_ICPC_2026___Tool.pdf)
 
-# 📄 Citation
-
-```bibtex
-@Inproceedings{soares_de_oliveira2025:ICPC,
-  author = {Soares de Oliveira, Igor and Gervasio, Gabriel and Andrade, Alexandre and Pereira, Juliana Alves},
-  title     = {Scylla: A Unified Tool for Code Smell Classification in Python},
-  year      = {2025},
-  pages     = {1–5},
-  booktitle = {International Conference on Program Comprehension, Tools Track (ICPC2026)},  
-  publisher = {IEEE/ACM}
-}
-```
 
 
 # 🚀 Scylla
@@ -203,7 +191,7 @@ This application uses deep learning techniques to improve the classification of 
 # Artifacts
 
 
-This repository provides the artifacts associated with the paper, including the code used to extract the algorithms analyzed by PySmell, validating their correctness; the datasets containing the classified code samples; and the models employed in the experiments, with the aim of supporting result reproducibility and fostering further research. [Zenodo](https://zenodo.org/records/16707253)
+This repository provides the artifacts associated with the paper [Github](https://github.com/aisepucrio/lm4smells-core/tree/main)
 
 
 <!-- 
