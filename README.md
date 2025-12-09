@@ -13,13 +13,13 @@ The pre-print for the paper is available [here]()
 # 📄 Citation
 
 ```bibtex
-@Inproceedings{soares_de_oliveira2025:SBES,
-  author = {Soares de Oliveira, Igor and Carneiro, Joanne and Ribas, Jessica and Pereira, Juliana Alves},
-  title     = {Code Smell Classification in Python: Are Small Language Models Up to the Task?},
+@Inproceedings{soares_de_oliveira2025:ICPC,
+  author = {Soares de Oliveira, Igor and Gervasio, Gabriel and Andrade, Alexandre and Pereira, Juliana Alves},
+  title     = {Scylla: A Unified Tool for Code Smell Classification in Python},
   year      = {2025},
-  pages     = {1–7},
-  booktitle = {Brazilian Symposium on Software Engineering, Insightful Ideas and Emerging Results Track (SBES IIER)},  
-  publisher = {SOL}
+  pages     = {1–5},
+  booktitle = {International Conference on Program Comprehension, Tools Track (ICPC2026)},  
+  publisher = {IEEE/ACM}
 }
 ```
 
@@ -66,6 +66,7 @@ The application operates within an anti-corruption layer (ACL), acting as an eve
 │   ├──📁 src
 │   |   ├──📁 app
 │   |   |   ├──📁 application
+│   |   |   ├──📁 domain
 │   |   |   └──📁 infrastructure
 │   ├──📄 changelog
 │   ├──📄 .gitignore
