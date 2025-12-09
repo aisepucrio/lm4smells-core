@@ -82,7 +82,7 @@ class Smells:
                         smells.append(
                             SmellOccurrence(
                                 id=task_id,
-                                definition_author="Dpy",
+                                definition_author="Scylla",
                                 smell_type=smell_type,
                                 description=description,
                                 location=Location(
@@ -352,7 +352,7 @@ class Smells:
                         end_line=getattr(holder, "lineno", 0),
                     ),
                     metrics=Metrics(),
-                    definition_author="Dpy",
+                    definition_author="Scylla",
                 )
             )
 
